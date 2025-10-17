@@ -1,6 +1,8 @@
 "use client"
 
 import { useId, useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -21,6 +23,7 @@ const Chip = ({ selected, children, onClick }: { selected: boolean; children: Re
 )
 
 export default function FoodPlanForm() {
+  const router = useRouter()
   const costHelpId = useId()
   const addressHelpId = useId()
 
@@ -72,15 +75,15 @@ export default function FoodPlanForm() {
           });
 
           if (response.ok) {
-            alert("Form submitted successfully!");
-            // Optionally reset form or redirect
+            toast.success("Form submitted successfully!")
+            router.push("/thank-you")
           } else {
-            const errorData = await response.json();
-            alert(`Form submission failed: ${errorData.message}`);
+            const errorData = await response.json()
+            toast.error(`Form submission failed: ${errorData.message}`)
           }
         } catch (error) {
-          console.error("Error submitting form:", error);
-          alert("An unexpected error occurred during form submission.");
+          console.error("Error submitting form:", error)
+          toast.error("An unexpected error occurred during form submission.")
         }
       }}
     >
