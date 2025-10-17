@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Spinner } from "@/components/ui/spinner"
 
 const Chip = ({ selected, children, onClick }: { selected: boolean; children: React.ReactNode; onClick: () => void }) => (
   <Button
@@ -26,6 +27,7 @@ export default function FoodPlanForm() {
   const router = useRouter()
   const costHelpId = useId()
   const addressHelpId = useId()
+  const [isLoading, setIsLoading] = useState(false)
 
   // Local UI state for chips (still posts as hidden inputs for server handling)
   const [dailySpend, setDailySpend] = useState<number | "custom">(250)
@@ -44,8 +46,9 @@ export default function FoodPlanForm() {
     <form
       className="grid gap-6"
       onSubmit={async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
+        e.preventDefault()
+        setIsLoading(true)
+        const formData = new FormData(e.currentTarget)
         const data: { [key: string]: any } = {};
 
         // Extract values from standard input fields
@@ -84,6 +87,8 @@ export default function FoodPlanForm() {
         } catch (error) {
           console.error("Error submitting form:", error)
           toast.error("An unexpected error occurred during form submission.")
+        } finally {
+          setIsLoading(false)
         }
       }}
     >
@@ -279,7 +284,8 @@ export default function FoodPlanForm() {
           <p className="hidden text-xs text-muted-foreground sm:block">
             By continuing, you agree to receive plan updates. You can opt out anytime.
           </p>
-          <Button type="submit" className="px-6">
+          <Button type="submit" className="px-6 cursor-pointer" disabled={isLoading}>
+            {isLoading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
             Submit
           </Button>
         </div>

@@ -10,7 +10,7 @@ export default function ThankYouPage() {
           Your food plan survey has been submitted successfully. We will get back to you shortly.
         </p>
         <Link href="/" passHref>
-          <Button>Explore More</Button>
+          <Button className="cursor-pointer">Submit another survey</Button>
         </Link>
       </div>
     </div>
